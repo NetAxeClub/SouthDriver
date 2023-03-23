@@ -43,7 +43,11 @@ class netmko(NetpalmDriver):
                 if self.kwarg:
                     # normalise the ttp template name for ease of use
                     if "ttp_template" in self.kwarg.keys():
-                        if self.kwarg["ttp_template"]:
+                        if isinstance(self.kwarg['ttp_template'], list):
+                            template_name = (f"{config.ttp_templates}{x}.ttp" for x in self.kwarg['ttp_template'])
+                            self.kwarg["ttp_template"] = template_name
+                        else:
+                            # if self.kwarg["ttp_template"]:
                             template_name = (
                                 config.ttp_templates
                                 + self.kwarg["ttp_template"]

@@ -1,0 +1,76 @@
+<vars>
+# template variable with custom regular expression:
+PROTOCOL = "tcp|udp|icmp"
+</vars>
+<macro>
+def check_data(data):
+    results = []
+    ## print(data) 这里可以直接打印用于方法调试
+    ## print("data", data)
+    ## 判断是否真正解析到服务组
+    if data != [{}]:
+        if isinstance(data[0]['services'], dict):
+            return results
+        for item in data[0]['services']:
+            ## print(item)
+            if isinstance(item.get('items'), dict):
+                item['items'] = [item['items']]
+            if "items" in item:
+                results.append(item)
+        return results
+    return []
+</macro>
+<group name="services">
+##{{ ignore("\s*") }}service {{ name | re("\S+|\S+udp\s\S+") |strip('"') }}
+{{ ignore("\s*") }}service {{ name | strip('"') | re("\S+(\s\S+)?") }}
+{{ ignore("\s*") }}description {{ description | strip('"') }}
+## 带有timeout的老设备匹配
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ ignore("timeout\s\d+") }}
+</group>
+## 不带有timeout的新设备匹配
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ dst-port-max | to_int }} {{ ignore("timeout\s\d+") }}
+</group>
+## 不带有timeout的新设备匹配
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ dst-port-max | to_int }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ dst-port-max | to_int }} src-port {{ src-port-min | to_int }} {{ ignore("timeout\s\d+") }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ dst-port-max | to_int }} src-port {{ src-port-min | to_int }} {{ src-port-max | to_int }} {{ ignore("timeout\s\d+") }}
+</group>
+## dst-port 为单数字，src-port 为一对数字的情况，比如tcp dst-port 8888 src-port 0 65535 timeout 1800
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} src-port {{ src-port-min | to_int }} {{ src-port-max | to_int }} {{ ignore("timeout\s\d+") }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} src-port {{ src-port-min | to_int }} {{ src-port-max | to_int }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ ignore("application\s\S+") }} {{ ignore("timeout\s\d+") }}
+</group>
+## 不带有timeout的新设备匹配
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ dst-port-max | to_int }} src-port {{ src-port-min | to_int }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ dst-port-max | to_int }} src-port {{ src-port-min | to_int }} {{ src-port-max | to_int }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} dst-port {{ dst-port-min | to_int }} {{ ignore("application\s\S+") }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} type {{ type | to_int }} {{ ignore("code\s\d\s\d") }}
+</group>
+<group name="items">
+{{ ignore("\s*") }}{{ protocol | re("PROTOCOL") }} type {{ type }} {{ ignore("code\s\d\s\d\stimeout\s\d") }}
+</group>
+exit{{_end_}}
+</group>
+<output macro="check_data"/>
