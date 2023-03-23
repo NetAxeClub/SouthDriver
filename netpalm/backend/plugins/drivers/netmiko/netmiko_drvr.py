@@ -1,7 +1,8 @@
 import logging
 
-from netmiko import ConnectHandler, BaseConnection
-from netmiko.cisco_base_connection import CiscoBaseConnection
+from netmiko import BaseConnection
+from utils.zetmiko import ConnectHandler
+# from netmiko.cisco_base_connection import CiscoBaseConnection
 from typing import Optional
 
 from netpalm.backend.core.confload.confload import config
@@ -33,7 +34,7 @@ class netmko(NetpalmDriver):
         except Exception as e:
             write_meta_error(e)
 
-    def sendcommand(self, session=False, command=False):
+    def sendcommand(self, session, command):
         try:
             if self.enable_mode:
                 session.enable()
@@ -62,7 +63,7 @@ class netmko(NetpalmDriver):
         except Exception as e:
             write_meta_error(e)
 
-    def config(self, session=False, command="", enter_enable=False, dry_run=False):
+    def config(self, session, command="", enter_enable=False, dry_run=False):
         try:
             if type(command) == list:
                 comm = command

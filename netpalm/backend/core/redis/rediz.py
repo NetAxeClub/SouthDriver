@@ -138,30 +138,30 @@ class Rediz:
         # config check if TLS required
         if config.redis_tls_enabled:
             self.base_connection = Redis(
-                                        host=self.server,
-                                        port=self.port,
-                                        password=self.key,
-                                        ssl=True,
-                                        ssl_cert_reqs='required',
-                                        ssl_keyfile=config.redis_tls_key_file,
-                                        ssl_certfile=config.redis_tls_cert_file,
-                                        ssl_ca_certs=config.redis_tls_ca_cert_file,
-                                        socket_connect_timeout=config.redis_socket_connect_timeout,
-                                        socket_keepalive=config.redis_socket_keepalive,
-                                        retry_on_timeout=True,
-                                        retry_on_error=[ConnectionError]
-                                        )
+                host=self.server,
+                port=self.port,
+                password=self.key,
+                ssl=True,
+                ssl_cert_reqs='required',
+                ssl_keyfile=config.redis_tls_key_file,
+                ssl_certfile=config.redis_tls_cert_file,
+                ssl_ca_certs=config.redis_tls_ca_cert_file,
+                socket_connect_timeout=config.redis_socket_connect_timeout,
+                socket_keepalive=config.redis_socket_keepalive,
+                retry_on_timeout=True,
+                retry_on_error=[ConnectionError]
+            )
         else:
             self.base_connection = Redis(
-                                        host=self.server,
-                                        port=self.port,
-                                        password=self.key,
-                                        socket_connect_timeout=config.redis_socket_connect_timeout,
-                                        socket_keepalive=config.redis_socket_keepalive,
-                                        retry_on_timeout=True,
-                                        retry_on_error=[ConnectionError]
-                                        )
-#        self.base_q = Queue(self.core_q, connection=self.base_connection)
+                host=self.server,
+                port=self.port,
+                password=self.key,
+                socket_connect_timeout=config.redis_socket_connect_timeout,
+                socket_keepalive=config.redis_socket_keepalive,
+                retry_on_timeout=True,
+                retry_on_error=[ConnectionError]
+            )
+        #        self.base_q = Queue(self.core_q, connection=self.base_connection)
         self.networked_queuedb = config.redis_queue_store
         self.redis_pinned_store = config.redis_pinned_store
 
@@ -276,8 +276,11 @@ class Rediz:
             log.info(f"__create_queue_worker: creating queue and worker {pinned_worker_qname}")
             meta_template = self.__get_redis_meta_template()
             self.__append_network_queue_db(qn=pinned_worker_qname)
-            self.local_queuedb[pinned_container_queue]["queue"].enqueue_call(func=pinned_worker_constructor, args=(pinned_worker_qname,), meta=meta_template,
-                                     ttl=self.ttl, result_ttl=self.task_result_ttl)
+            self.local_queuedb[pinned_container_queue]["queue"].enqueue_call(func=pinned_worker_constructor,
+                                                                             args=(pinned_worker_qname,),
+                                                                             meta=meta_template,
+                                                                             ttl=self.ttl,
+                                                                             result_ttl=self.task_result_ttl)
             r = self.__append_local_queue_db(qn=pinned_worker_qname)
             return r
         except Exception as e:
@@ -297,9 +300,9 @@ class Rediz:
                     if not self.__exists_in_local_queue_db(qn=host["pinned_listen_queue"]):
                         self.__append_local_queue_db(qn=host["pinned_listen_queue"])
                     self.__create_queue_worker(
-                                            pinned_container_queue=host["pinned_listen_queue"],
-                                            pinned_worker_qname=hst
-                                            )
+                        pinned_container_queue=host["pinned_listen_queue"],
+                        pinned_worker_qname=hst
+                    )
                     capacity = True
                     break
             # throw exception if no capcity found
@@ -365,18 +368,18 @@ class Rediz:
         return resultdata
 
     def __sendtask(self, q, exe, **kwargs):
-        
+
         log.debug(f'__sendtask: {kwargs["kwargs"]}')
         ttl = kwargs["kwargs"].get("ttl")
         meta_template = self.__get_redis_meta_template()
         if not ttl:
             task = self.local_queuedb[q]["queue"].enqueue_call(func=self.routes[exe], description=q, ttl=self.ttl,
-                                                            result_ttl=self.task_result_ttl, kwargs=kwargs["kwargs"],
-                                                            meta=meta_template, timeout=self.timeout)
+                                                               result_ttl=self.task_result_ttl, kwargs=kwargs["kwargs"],
+                                                               meta=meta_template, timeout=self.timeout)
         else:
             task = self.local_queuedb[q]["queue"].enqueue_call(func=self.routes[exe], description=q, ttl=ttl,
-                                                            result_ttl=ttl, kwargs=kwargs["kwargs"],
-                                                            meta=meta_template, timeout=ttl)
+                                                               result_ttl=ttl, kwargs=kwargs["kwargs"],
+                                                               meta=meta_template, timeout=ttl)
         resultdata = self.__render_task_response(task)
         return resultdata
 
@@ -426,7 +429,8 @@ class Rediz:
             log.info(f'fetching subtask: {parent_task_object["data"]["task_id"]}')
             task_errors = []
             for j in range(len(parent_task_object["data"]["task_result"])):
-                tempres = Job.fetch(parent_task_object["data"]["task_result"][j]["data"]["data"]["task_id"], connection=self.base_connection)
+                tempres = Job.fetch(parent_task_object["data"]["task_result"][j]["data"]["data"]["task_id"],
+                                    connection=self.base_connection)
                 temprespobj = self.__render_task_response(tempres)
                 if status != "started" or status != "queued":
                     if temprespobj["data"]["task_status"] == "started":
@@ -437,7 +441,7 @@ class Rediz:
                             "task_id": parent_task_object["data"]["task_result"][j]["data"]["data"]["task_id"],
                             "task_errors": temprespobj["data"]["task_errors"]
                         }
-                        })
+                    })
                 parent_task_object["data"]["task_result"][j]["data"].update(temprespobj)
             if len(task_errors) >= 1:
                 parent_task_object["data"]["task_errors"] = task_errors
@@ -452,7 +456,8 @@ class Rediz:
         try:
             task = Job.fetch(task_id, connection=self.base_connection)
             response_object = self.__render_task_response(task)
-            if "task_id" in str(response_object["data"]["task_result"]) and "operation" in str(response_object["data"]["task_result"]):
+            if "task_id" in str(response_object["data"]["task_result"]) and "operation" in str(
+                    response_object["data"]["task_result"]):
                 response_object = self.__fetchsubtask(parent_task_object=response_object)
             return response_object
         except Exception as e:
@@ -623,8 +628,8 @@ class Rediz:
                     "kwargs": {
                         "hostname": w["hostname"],
                         "pid": w["pid"]
-                        }
                     }
+                }
                 self.send_broadcast(json.dumps(kill_message))
 
                 # update pinned db
@@ -636,7 +641,7 @@ class Rediz:
                 self.base_connection.set(
                     self.redis_pinned_store,
                     json.dumps(rjson)
-                    )
+                )
 
         if not killed:
             raise Exception(f"worker {worker_name} not found")
@@ -768,7 +773,7 @@ class Rediz:
                 self.base_connection.set(
                     config.redis_pinned_store,
                     json.dumps(rjson)
-                    )
+                )
                 break
             idex += 1
 

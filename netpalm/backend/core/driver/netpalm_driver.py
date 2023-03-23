@@ -15,7 +15,7 @@ class NetpalmDriver:
         """connect to the device"""
         raise NotImplementedError
 
-    def sendcommand(self, session=False, command=False):
+    def sendcommand(self, session, command):
         """send a command to the device"""
         raise NotImplementedError
 
@@ -23,6 +23,6 @@ class NetpalmDriver:
         """send a config to the device"""
         raise NotImplementedError
 
-    def logout(self, session=False):
+    def logout(self, session):
         """logout of the device"""
         raise NotImplementedError

@@ -73,7 +73,7 @@ class UpdateLogProcessor:
         try:
             result = handler(**dict(entry.data))
         except KeyError:
-            raise NotImplementedError(f"Can't handle {entry.type=}")
+            raise NotImplementedError(f"Can't handle {entry.type}")
         self.last_seq_number = entry.seq
         return result
 
