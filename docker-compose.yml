@@ -50,6 +50,8 @@ services:
       build:
         context: .
         dockerfile: ./dockerfiles/netpalm_redis_dockerfile
+      ports:
+        - "16379:6379"
       networks:
       - "netpalm-network"
       restart: always
