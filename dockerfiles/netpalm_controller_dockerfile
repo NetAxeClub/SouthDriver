@@ -4,13 +4,13 @@ RUN apt-get update \
     && apt-get install -y git \
     && git clone https://github.com/networktocode/ntc-templates.git \
     && mv ntc-templates ntc_templates \
-    && pip3 install --upgrade pip
+    && pip3 install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple/
 
 ADD netpalm/requirements.txt /code/
 RUN pip3 install -r /code/requirements.txt
 
 ADD netpalm/controller_addtl_requirements.txt /code/
-RUN pip3 install -r /code/controller_addtl_requirements.txt
+RUN pip3 install -r /code/controller_addtl_requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 ADD . /code
 WORKDIR /code
