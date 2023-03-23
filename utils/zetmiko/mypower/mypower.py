@@ -8,7 +8,7 @@ class MypowerOsSSH(CiscoSSHConnection):
     def session_preparation(self) -> None:
         """Prepare the session after the connection has been established."""
         self.ansi_escape_codes = True
-        self._test_channel_read(pattern=r">")
+        self._test_channel_read(pattern=r"(>|#)")
         self.set_terminal_width(
             command="terminal width 511", pattern=r"terminal width 511"
         )
