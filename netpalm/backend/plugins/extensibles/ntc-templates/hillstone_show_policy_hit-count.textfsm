@@ -1,0 +1,23 @@
+Value NUMBER (\d+)
+Value Id (\d+)
+Value Name (\S+)
+Value SRCZONE (\S+)
+Value DSTZONE (\S+)
+Value SRCADDR (\S+)
+Value DSTADDR (\S+)
+Value Service (\S+)
+Value Applica ((\S+)?)
+Value Action (\S+)
+Value Count (\d+)
+
+Start
+  ^Most hit policy rules:
+  ^==============
+  ^No.   Id  Name
+  ^--------- -> Begin
+
+Begin
+  ^\s*${NUMBER}\s+${Id}\s+${Name}\s+${SRCZONE}\s+${DSTZONE}\s+${SRCADDR}\s+${DSTADDR}\s+${Service}\s+${Applica}\s+${Action}\s+${Count} -> Record
+  ^\s*${NUMBER}\s+${Id}\s+${SRCZONE}\s+${DSTZONE}\s+${SRCADDR}\s+${DSTADDR}\s+${Service}\s+${Applica}\s+${Action}\s+${Count} -> Record
+  ^========*$$
+  ^\s*$$

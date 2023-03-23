@@ -1,0 +1,9 @@
+Value Version (\S+)
+Value Product (\S+)
+Value SN (\S+)
+
+
+Start
+  #^.*Version\s${Version}
+  ^Product name:\s${Product}\sS/N:\s${SN}
+  ^Boot\sfile\sis\s${Version}.bin.* -> Record

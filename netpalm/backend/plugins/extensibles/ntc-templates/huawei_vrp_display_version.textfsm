@@ -1,0 +1,8 @@
+Value VRP_VERSION (\S+[\s\S+]+)
+Value MODEL (\S+)
+Value UPTIME (.+)
+
+
+Start
+  ^.*software,\s+Version\s+${VRP_VERSION}
+  ^(HUAWEI|FutureMatrix)\s+${MODEL}\s+(Routing\sSwitch\s)?uptime\s+is\s+${UPTIME}$$
