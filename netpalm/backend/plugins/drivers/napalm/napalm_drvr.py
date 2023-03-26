@@ -35,7 +35,7 @@ class naplm(NetpalmDriver):
         except Exception as e:
             write_meta_error(e)
 
-    def sendcommand(self, session=False, command=False):
+    def sendcommand(self, session, command):
         log.debug(f"running send command on napalm driver: {session} {command}")
         try:
             result = {}
@@ -51,7 +51,7 @@ class naplm(NetpalmDriver):
         except Exception as e:
             write_meta_error(e)
 
-    def config(self, session=False, command=False, dry_run=False):
+    def config(self, session, command, dry_run=False):
         try:
             if type(command) == list:
                 napalmconfig = ""

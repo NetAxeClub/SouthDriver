@@ -162,6 +162,7 @@ def handle_delete_universal_template(**kwargs):
     log.info(f"Result: {result['data']}")
 
 
+# 处理背景任务消息
 def handle_broadcast_message(broadcast_msg: typing.Dict):
     try:
         msg_bytes = broadcast_msg["data"]
@@ -198,6 +199,7 @@ def handle_broadcast_message(broadcast_msg: typing.Dict):
     handlers[msg_type](**kwargs)
 
 
+# 监听背景任务
 def broadcast_queue_worker(queue_name):
     try:
         log.info("Before listening for broadcasts, first check the log")

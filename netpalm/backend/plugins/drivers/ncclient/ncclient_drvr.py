@@ -57,7 +57,7 @@ class ncclien(NetpalmDriver):
         except Exception as e:
             write_meta_error(e)
 
-    def sendcommand(self, session=False, command=False):
+    def sendcommand(self, session, command):
         try:
             result = {}
             if self.kwarg:
@@ -78,6 +78,9 @@ class ncclien(NetpalmDriver):
                 # check whether RPC required
                 if self.kwarg.get("rpc", False):
                     response = session.rpc(**self.kwarg).data_xml
+                elif self.kwarg.get("get", False):
+                    response = session.get(self.kwarg).data_xml
+                    # response = session.get(**self.kwarg).data_xml
                 # else a standard get_config method call
                 else:
                     response = session.get_config(**self.kwarg).data_xml
@@ -95,7 +98,7 @@ class ncclien(NetpalmDriver):
         except Exception as e:
             write_meta_error(e)
 
-    def config(self, session=False, dry_run=False):
+    def config(self, session, dry_run):
         try:
             result = {}
             if self.kwarg:

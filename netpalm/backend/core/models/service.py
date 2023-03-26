@@ -52,15 +52,18 @@ class ServiceModel(BaseModel):
             }
         }
 
+
 # now redundant
 class ServiceModelMethods(BaseModel):
     operation: ServiceLifecycle
     path: Optional[str] = None
     payload: dict
 
+
 # now redundant
 class ServiceModelSupportedMethods(BaseModel):
     supported_methods: List[ServiceModelMethods] = None
+
 
 # now redundant
 class ServiceModelTemplate(BaseModel):

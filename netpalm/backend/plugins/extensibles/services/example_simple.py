@@ -9,6 +9,10 @@ log = logging.getLogger(__name__)
 
 class NetpalmUserServiceModel(BaseModel):
     hostname: str
+    username: str
+    password: str
+    device_type: str
+    command: list
 
 
 class NetpalmUserService(NetpalmService):
@@ -23,13 +27,14 @@ class NetpalmUserService(NetpalmService):
         netmiko_send_data = {
             "library": "netmiko",
             "connection_args": {
-                "device_type": "cisco_ios",
+                "device_type": "hp_comware",
                 "host": model_data.hostname,
-                "username": "admin",
-                "password": "admin",
-                "timeout": 5,
+                "username": model_data.username,
+                "password": model_data.password,
+                "timeout": 10,
+                "session_timeout": 20
             },
-            "command": "show run | i hostname",
+            "command": model_data.command,
             "queue_strategy": "pinned",
         }
         job_result = self.mgr.get_config_netmiko(netmiko_send_data)

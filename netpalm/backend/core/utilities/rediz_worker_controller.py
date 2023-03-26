@@ -128,6 +128,7 @@ class RedisPinnedWorker(RedisWorker):
             self._listen(self.queue_name)
 
 
+# pinned
 class RedisProcessWorker(RedisWorker):
     def __init__(self, config: Config):
         super().__init__(config)
