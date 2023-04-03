@@ -26,6 +26,7 @@ class TaskMetaData(BaseModel):
     total_elapsed_seconds: Optional[str]
     assigned_worker: Optional[str]
 
+
 class TaskError(BaseModel):
     exception_class: str
     exception_args: List[str]
