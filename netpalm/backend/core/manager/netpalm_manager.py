@@ -12,7 +12,7 @@ from netpalm.backend.core.models.models import GetConfig
 from netpalm.backend.core.models.napalm import NapalmGetConfig
 from netpalm.backend.core.models.ncclient import NcclientGet
 from netpalm.backend.core.models.ncclient import NcclientGetConfig
-from netpalm.backend.core.models.netmiko import NetmikoGetConfig
+from netpalm.backend.core.models.netmiko import NetmikoGetConfig, ParamikoGetConfig
 from netpalm.backend.core.models.puresnmp import PureSNMPGetConfig
 from netpalm.backend.core.models.restconf import Restconf
 
@@ -48,10 +48,14 @@ class NetpalmManager(Rediz):
             req_data = getcfg.dict(exclude_none=True)
         if library is not None:
             req_data["library"] = library
-        log.info("req_data", str(getcfg))
+        print("req_data", str(getcfg))
         r = self.execute_task(method="getconfig", kwargs=req_data)
         resp = jsonable_encoder(r)
         return resp
+
+    def get_config_paramiko(self, getcfg: ParamikoGetConfig):
+        """ executes the netpalm netmiko getconfig method async and returns the response obj """
+        return self._get_config(getcfg, library="paramiko")
 
     def get_config_netmiko(self, getcfg: NetmikoGetConfig):
         """ executes the netpalm netmiko getconfig method async and returns the response obj """

@@ -1,5 +1,5 @@
 import logging
-
+from copy import deepcopy
 from paramiko import SSHClient, AutoAddPolicy
 from netpalm.backend.core.confload.confload import config
 from netpalm.backend.core.driver.netpalm_driver import NetpalmDriver
@@ -20,7 +20,8 @@ class paramko(NetpalmDriver):
             if commit_label := self.kwarg.get("commit_label", None):
                 self.commit_label = commit_label
                 del self.kwarg["commit_label"]
-        self.enable_mode = kwargs.get("enable_mode", False)
+            self.kwarg['hostname'] = deepcopy(self.kwarg['host'])
+            del self.kwarg["host"]
 
     def connect(self):
         try:
@@ -33,38 +34,10 @@ class paramko(NetpalmDriver):
 
     def sendcommand(self, session, command):
         try:
-            if self.enable_mode:
-                session.enable()
             result = {}
             for commands in command:
-                # 连接服务器
                 stdin, stdout, stderr = session.exec_command(commands)
-                # 执行命令
-                result = stdout.read()
-                # 关闭连接
-                if self.kwarg:
-                    # normalise the ttp template name for ease of use
-                    if "ttp_template" in self.kwarg.keys():
-                        if isinstance(self.kwarg['ttp_template'], list):
-                            _index = command.index(commands)
-                            template_name = (
-                                    config.ttp_templates
-                                    + self.kwarg['ttp_template'][_index]
-                                    + ".ttp"
-                            )
-                            self.kwarg["ttp_template"] = template_name
-                        else:
-                            template_name = (
-                                config.ttp_templates
-                                + self.kwarg["ttp_template"]
-                                + ".ttp"
-                            )
-                            self.kwarg["ttp_template"] = template_name
-                    stdin, stdout, stderr = session.exec_command(commands)
-                    result[commands] = stdout.read().decode()
-                else:
-                    stdin, stdout, stderr = session.exec_command(commands)
-                    result[commands] = stdout.read().decode()
+                result[commands] = stdout.read().decode()
             return result
         except Exception as e:
             write_meta_error(e)
