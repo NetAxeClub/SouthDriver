@@ -20,8 +20,9 @@ class paramko(NetpalmDriver):
             if commit_label := self.kwarg.get("commit_label", None):
                 self.commit_label = commit_label
                 del self.kwarg["commit_label"]
-            self.kwarg['hostname'] = deepcopy(self.kwarg['host'])
-            del self.kwarg["host"]
+        if self.connection_args:
+            self.connection_args['hostname'] = deepcopy(self.connection_args['host'])
+            del self.connection_args["host"]
 
     def connect(self):
         try:
