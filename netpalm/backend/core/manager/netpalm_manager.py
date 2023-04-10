@@ -12,7 +12,8 @@ from netpalm.backend.core.models.models import GetConfig
 from netpalm.backend.core.models.napalm import NapalmGetConfig
 from netpalm.backend.core.models.ncclient import NcclientGet
 from netpalm.backend.core.models.ncclient import NcclientGetConfig
-from netpalm.backend.core.models.netmiko import NetmikoGetConfig, ParamikoGetConfig
+from netpalm.backend.core.models.netmiko import NetmikoGetConfig
+from netpalm.backend.core.models.paramiko import ParamikoGetConfig
 from netpalm.backend.core.models.puresnmp import PureSNMPGetConfig
 from netpalm.backend.core.models.restconf import Restconf
 
@@ -53,7 +54,7 @@ class NetpalmManager(Rediz):
         return resp
 
     def get_config_paramiko(self, getcfg: ParamikoGetConfig):
-        """ executes the netpalm netmiko getconfig method async and returns the response obj """
+        """ executes the netpalm paramiko getconfig method async and returns the response obj """
         return self._get_config(getcfg, library="paramiko")
 
     def get_config_netmiko(self, getcfg: NetmikoGetConfig):

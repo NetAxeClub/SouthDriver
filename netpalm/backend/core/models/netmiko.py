@@ -66,19 +66,6 @@ class NetmikoConnectionArgs(BaseModel):
     auto_connect: Optional[bool] = True
 
 
-class ParamikoConnectionArgs(BaseModel):
-    ip: Optional[str] = None
-    host: Optional[str] = None
-    username: str
-    password: str
-
-
-class ParamikoGetConfig(BaseModel):
-    connection_args: ParamikoConnectionArgs
-    command: Any
-    webhook: Optional[Webhook] = None
-
-
 class NetmikoGetConfig(BaseModel):
     connection_args: NetmikoConnectionArgs
     command: Any

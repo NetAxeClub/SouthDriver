@@ -15,7 +15,6 @@ log = logging.getLogger(__name__)
 
 def exec_command(**kwargs):
     """main function for executing getconfig commands to southbound drivers"""
-    log.debug('exec_command', str(kwargs))
     lib = kwargs.get("library", False)
     command = kwargs.get("command", False)
     webhook = kwargs.get("webhook", False)
@@ -28,7 +27,7 @@ def exec_command(**kwargs):
     else:
         commandlst = command
 
-    log.debug(f"driver_map: {driver_map}")
+    # log.debug(f"driver_map: {driver_map}")
 
     if not driver_map.get(lib):
         raise NotImplementedError(f"unknown 'driver' {lib}")

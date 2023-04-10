@@ -369,7 +369,7 @@ class Rediz:
 
     def __sendtask(self, q, exe, **kwargs):
 
-        log.debug(f'__sendtask: {kwargs["kwargs"]}')
+        # log.debug(f'__sendtask: {kwargs["kwargs"]}')
         ttl = kwargs["kwargs"].get("ttl")
         meta_template = self.__get_redis_meta_template()
         if not ttl:
@@ -384,7 +384,10 @@ class Rediz:
         return resultdata
 
     def execute_task(self, method, **kwargs):
-        """main entry point for rpc tasks"""
+        """
+        main entry point for rpc tasks,
+        host 在connection_args必填，然后在各自的驱动中转换成插件需要的hostname或者hostip等格式
+        """
         kw = kwargs.get("kwargs", False)
         connectionargs = kw.get("connection_args", False)
         host = False

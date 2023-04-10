@@ -1,5 +1,4 @@
 import logging
-from copy import deepcopy
 from paramiko import SSHClient, AutoAddPolicy
 from netpalm.backend.core.confload.confload import config
 from netpalm.backend.core.driver.netpalm_driver import NetpalmDriver
@@ -20,9 +19,7 @@ class paramko(NetpalmDriver):
             if commit_label := self.kwarg.get("commit_label", None):
                 self.commit_label = commit_label
                 del self.kwarg["commit_label"]
-        if self.connection_args:
-            self.connection_args['hostname'] = deepcopy(self.connection_args['host'])
-            del self.connection_args["host"]
+        self.connection_args["hostname"] = self.connection_args.pop("host")
 
     def connect(self):
         try:
