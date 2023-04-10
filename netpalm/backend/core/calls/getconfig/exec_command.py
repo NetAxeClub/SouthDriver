@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 
 def exec_command(**kwargs):
     """main function for executing getconfig commands to southbound drivers"""
+    log.debug('exec_command', kwargs)
     lib = kwargs.get("library", False)
     command = kwargs.get("command", False)
     webhook = kwargs.get("webhook", False)
