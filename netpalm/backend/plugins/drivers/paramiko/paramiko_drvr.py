@@ -28,8 +28,8 @@ class paramko(NetpalmDriver):
         try:
             ssh = SSHClient()
             ssh.set_missing_host_key_policy(AutoAddPolicy())
-            paramikoses = ssh.connect(**self.connection_args)
-            return paramikoses
+            ssh.connect(**self.connection_args)
+            return ssh
         except Exception as e:
             write_meta_error(e)
 

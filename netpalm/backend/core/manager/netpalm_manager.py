@@ -48,7 +48,6 @@ class NetpalmManager(Rediz):
             req_data = getcfg.dict(exclude_none=True)
         if library is not None:
             req_data["library"] = library
-        print("req_data", str(getcfg))
         r = self.execute_task(method="getconfig", kwargs=req_data)
         resp = jsonable_encoder(r)
         return resp
