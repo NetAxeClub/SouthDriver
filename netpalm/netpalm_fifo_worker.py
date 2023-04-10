@@ -11,6 +11,7 @@ from .backend.core.utilities.rediz_worker_controller import RedisWorker, RedisFi
 config.setup_logging(max_debug=True)
 log = logging.getLogger(__name__)
 
+
 def fifo_worker(queue, counter):
     try:
         wr = RedisFifoWorker(config, queue, counter)
