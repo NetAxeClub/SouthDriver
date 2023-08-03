@@ -7,9 +7,10 @@ log = logging.getLogger(__name__)
 class NetpalmDriver:
     """ NetPalmDriver is the base class for all NetPalm drivers. """
 
+    driver_name = None
+
     def __init__(self, **kwargs):
         log.info(f"netpalm service: invoking")
-        self.driver_name = None
 
     def connect(self):
         """connect to the device"""

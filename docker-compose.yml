@@ -2,7 +2,8 @@ version: "3.7"
 
 services:
 
-    netpalm-controller:
+    south-driver-controller:
+      image: registry.cn-hangzhou.aliyuncs.com/netaxe/south-driver-controller:1.0
       build:
           context: .
           dockerfile: ./dockerfiles/netpalm_controller_dockerfile
@@ -13,12 +14,13 @@ services:
       ports:
           - "9001:9000"
       networks:
-          - "netpalm-network"
+          - docker_netaxe
       depends_on:
-          - redis
+          - south-driver-redis
       restart: always
 
-    netpalm-worker-pinned:
+    south-driver-pinned:
+      image: registry.cn-hangzhou.aliyuncs.com/netaxe/south-driver-pinned:1.0
       build:
           context: .
           dockerfile: ./dockerfiles/netpalm_pinned_worker_dockerfile
@@ -27,12 +29,13 @@ services:
         - NETPALM_CONFIG=/code/config/config.json
         - NETPALM_LOG_CONFIG_FILENAME=/code/config/log-config.yml
       depends_on:
-        - redis
+        - south-driver-redis
       networks:
-      - "netpalm-network"
+          - docker_netaxe
       restart: always
 
-    netpalm-worker-fifo:
+    south-driver-fifo:
+      image: registry.cn-hangzhou.aliyuncs.com/netaxe/south-driver-fifo:1.0
       build:
           context: .
           dockerfile: ./dockerfiles/netpalm_fifo_worker_dockerfile
@@ -41,22 +44,22 @@ services:
         - NETPALM_CONFIG=/code/config/config.json
         - NETPALM_LOG_CONFIG_FILENAME=/code/config/log-config.yml
       depends_on:
-        - redis
+        - south-driver-redis
       networks:
-      - "netpalm-network"
+          - docker_netaxe
       restart: always
 
-    redis:
+    south-driver-redis:
+      image: registry.cn-hangzhou.aliyuncs.com/netaxe/south-driver-redis:1.0
       build:
         context: .
         dockerfile: ./dockerfiles/netpalm_redis_dockerfile
       ports:
         - "16379:6379"
       networks:
-      - "netpalm-network"
+          - docker_netaxe
       restart: always
 
 networks:
-
-  netpalm-network:
-    name: "netpalm-network"
+  docker_netaxe:
+    external: true
